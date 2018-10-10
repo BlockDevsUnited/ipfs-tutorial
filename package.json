@@ -1,0 +1,8 @@
+{
+  "name": "ipfsmeetup",
+  "version": "1.0.0",
+  "description": "A bunch of JS code for messing around with IPFS",
+  "dependencies": {
+    "ipfs-api": "^24.0.2"
+  }
+}

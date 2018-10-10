@@ -1,0 +1,97 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>The Client</title>
+
+    <!--link rel="stylesheet" type="text/css" href="https://ipfs.io/ipfs/Qmay8A2gCZkn7dehD2MAEUUPNPQ8TaXmTu1aGvKXi8fC7q/semantic.min.css"-->
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/ipfs/Qmay8A2gCZkn7dehD2MAEUUPNPQ8TaXmTu1aGvKXi8fC7q/semantic.min.css">
+
+</head>
+
+<script>
+var run = function() {
+    var host = document.getElementById("ip-address").value;
+    var port = document.getElementById("port").value;
+    document.getElementById("ipfs-result").value = 'loading...';
+    document.getElementById("ipns-result").value = 'loading...';
+    fetch('http://'+host+':'+port+'/api/v0/files/stat?arg=/test.txt')
+    .then(data => {return data.json()})
+    .then(payload => {
+        var hash = payload.Hash;
+        return fetch('http://localhost:8080/ipfs/' + hash);
+    })
+    .then(data => {return data.text()})
+    .then(payload => {
+        document.getElementById("ipfs-result").value = payload;
+        myroot_ipns_key = 'QmQJvfVVhtPhYKujgR8BbkGSv5cM7fnyscLn7WCX86d6q6';
+        return fetch('http://localhost:8080/ipns/' + myroot_ipns_key);
+    })
+    .then(data => {return data.text()})
+    .then(payload => {
+        document.getElementById("ipns-result").value = payload;
+    })
+    return false;
+}
+</script>
+
+<body>
+    <div class="ui middle aligned center aligned grid" style="margin-top:50px;">
+        <div class="column" style="width:450px;">
+            <h2 class="ui teal header">
+                <div class="content">
+                    Fetch Qm hash of '/test.txt' from node:
+                </div>
+            </h2>
+            <form class="ui large form">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui labeled input">
+                            <a class="ui label" style="width:8em;">Host</a>
+                            <input type="text" id="ip-address" value="127.0.0.1">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui labeled input">
+                            <a class="ui label" style="width:8em;">API Port</a>
+                            <input type="text" id="port" value="5001">
+                        </div>
+                    </div>
+                    <div class="ui fluid large teal submit button" onclick="run()">Fetch</div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="ui middle aligned center aligned grid" style="margin-top:50px;">
+        <div class="column" style="width:450px;">
+            <h2 class="ui teal header">
+                <div class="content">
+                    Results
+                </div>
+            </h2>
+            <form class="ui large form">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui labeled input">
+                            <a class="ui label" style="width:11em;">Latest IPFS</a>
+                            <input disabled type="text" id="ipfs-result">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui labeled input">
+                            <a class="ui label" style="width:11em;">Latest IPNS</a>
+                            <input disabled type="text" id="ipns-result">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
